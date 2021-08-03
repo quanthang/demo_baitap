@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -14,74 +13,87 @@
 </head>
 <body>
 <div class="container">
-    <h2>list product</h2>
+    <h2>Product</h2>
     @if(session('message'))
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Success!</strong> {session('message')}
+            <strong>Success!</strong>{{session('message')}}
         </div>
     @endif
     @if(session('remove'))
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Success!</strong> {session('remove')}
+            <strong>Success!</strong>{{session('remove')}}
         </div>
     @endif
-
     <table class="table table-dark table-hover">
         <thead>
         <tr>
-            <th>name</th>
-            <th>price</th>
-            <th>thumbnail</th>
-            <th>quantity</th>
-            <th>subtotal</th>
-            <th>action</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Thumbnail</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
-        <?php
-$totalPrice=0
-        ?>
-@foreach($shoppingCart as $obj)
-    <?php
-    if (!empty($obj)){
-
-        $totalPrice+=$obj->unitPrice*$obj->quantity;
-
-    }
-    ?>
-    <form action="/add" method="get">
-        <input type="hidden" name="cartAction" value="update">
-        <input type="hidden" name="productId" value="{{$obj->id}}">
-        <tr>
-            <td>
-                {{$obj -> name}}
-            </td>
-            <td>
-                {{$obj -> unitPrice}}
-            </td>
-            <td>
-                <img src="{{$obj -> thumbnail}}" alt="" width="70px">
-            </td>
-           <td><input type="number" min="1" name="productQuantity" value="{{$obj->quantity}}">
-               <td>{{$obj->quantity*$obj->unitPrice}}</td>
-           </td>
-
-            <td>
-                <button class="btn btn-primary">Update</button>
-                <a href="/remove?productId={{$obj->id}}"  class="btn btn-danger">Remove</a>
-            </td>
-        </tr>
-    </form>
-    @endforeach
-    </tbody>
+        @if($shoppingCart == null)
+            Vui Lòng Thêm Mới Sản Phẩm
+        @else
+            <?php
+            $totalPrice=0
+            ?>
+            @foreach($shoppingCart as $obj)
+                <?php
+                if (!empty($obj)){
+                    $totalPrice += $obj->unitPrice*$obj->quantity;
+                }
+                ?>
+                <form action="/add" method="get">
+                    <input type="hidden" name="cartAction" value="update">
+                    <input type="hidden" name="productId" value="{{$obj->id}}">
+                    <tr>
+                        <td>{{$obj->name}}</td>
+                        <td>{{$obj->unitPrice}}</td>
+                        <td>
+                            <img width="100px" src="{{$obj->thumbnail}}">
+                        </td>
+                        <td><input type="number" min="1" name="productQuantity" value="{{$obj->quantity}}"></td>
+                        <td>{{$obj->quantity*$obj->unitPrice}}</td>
+                        <td>
+                            <button class="btn btn-primary">Update</button>
+                            <a href="/remove??productId={{$obj->id}}" class="btn btn-danger">Remove</a>
+                        </td>
+                    </tr>
+                </form>
+            @endforeach
+            <div>
+                Total Price:{{$totalPrice}}
+            </div>
+        @endif
+        </tbody>
     </table>
-    <div>Total Price:{{$totalPrice}}</div>
+    <div class="row mt-5 justify-content-end">
+        <form class="col-6" action="/save" method="post">
+            @csrf
+            <div class="col-12 form-group">
+                <input class="form-control" type="text" name="shipName" placeholder="Enter Name">
+            </div>
+            <div class="col-12 form-group">
+                <input class="form-control" type="text" name="shipPhone" placeholder="Enter Phone">
+            </div>
+            <div class="col-12 form-group">
+                <input class="form-control" type="text" name="shipAddress" placeholder="Enter Address">
+            </div>
+            <div class="col-12 form-group">
+                <input class="form-control" type="text" name="note" placeholder="Enter Note">
+            </div>
+            <div class="form-group text-center">
+                <button class=" btn btn-primary">Submit</button>
+            </div>
+        </form>
     </div>
-
-
-    </body>
-    </html>
-
-
+</div>
+</body>
+</html>

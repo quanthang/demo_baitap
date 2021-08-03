@@ -21,3 +21,4 @@ Route::get('list',[ProductController::class,'index']);
 Route::get('add',[ShoppingCartController::class,'add']);
 Route::get('show',[ShoppingCartController::class,'show']);
 Route::get('remove',[ShoppingCartController::class,'remove']);
+Route::post('save',[ShoppingCartController::class,'save']);
